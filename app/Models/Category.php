@@ -23,9 +23,9 @@ class Category extends Model
         'slug',
         'content'
     ];
-    
+
     // Relationship with PostCategory
-    public function post_tags() {
+    public function post_categories() {
         return $this->belongsToMany(Post::class, 'post_id');
     }
 }

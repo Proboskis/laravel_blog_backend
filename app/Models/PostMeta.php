@@ -14,7 +14,7 @@ class PostMeta extends Model
      *
      * @var string
      */
-    // protected $table = "post_meta";
+    // protected $table = "post_metas";
 
     protected $fillable = [
         'post_id',

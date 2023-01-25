@@ -21,7 +21,7 @@ class PostTag extends Model
         return $this->hasMany(Post::class, 'post_id');
     }
 
-    // Relationship with BlogdbTag
+    // Relationship with Tag
     public function tags() {
         return $this->hasMany(Tag::class, 'tag_id');
     }

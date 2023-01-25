@@ -21,8 +21,8 @@ class PostCategory extends Model
         return $this->hasMany(Post::class, 'post_id');
     }
 
-    // Relationship with Categories
+    // Relationship with Category
     public function tags() {
-        return $this->hasMany(Categories::class, 'categories_id');
+        return $this->hasMany(Category::class, 'categories_id');
     }
 }
