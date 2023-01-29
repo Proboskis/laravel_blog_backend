@@ -17,11 +17,12 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedBigInteger('post_parent_id')->unsigned()->nullable()->default(DB::raw('NULL'));;
+            $table->unsignedBigInteger('post_parent_id')->unsigned()->nullable()->default(DB::raw('NULL'));
             $table->foreign('post_parent_id')->references('id')->on('posts');
             $table->string('title', 25);
             $table->string('meta_title', 100);
             $table->string('slug', 100);
+            $table->tinyInteger('reading_time');
             $table->tinyText('summary');
             $table->boolean('published')->default('0');
             $table->datetime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

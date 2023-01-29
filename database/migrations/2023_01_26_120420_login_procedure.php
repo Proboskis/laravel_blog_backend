@@ -15,13 +15,11 @@ return new class extends Migration
     public function up()
     {
         $procedure = "
-            DELIMITER $$
-
-            DROP PROCEDURE IF EXISTS `sp_log_in` $$
+            DROP PROCEDURE IF EXISTS `sp_log_in`;
             CREATE PROCEDURE `sp_log_in` (
-               IN `mail` VARCHAR(50),
-               IN `pass` VARCHAR(40),
-               OUT `response_message` VARCHAR(64),
+               IN `mail` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
+               IN `pass` VARCHAR(20) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
+               OUT `response_message` VARCHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
                OUT `ID` BIGINT
             )
             READS SQL DATA
@@ -29,7 +27,7 @@ return new class extends Migration
                 DECLARE `_salt` CHAR(24);
                 SET `ID` = NULL;
 
-                SELECT LOWER(HEX(`salt`)) INTO `_salt` FROM `users` WHERE `email` = `mail`;
+                SELECT HEX(`salt`) INTO `_salt` FROM `users` WHERE `email` = `mail`;
                 IF (`_salt` IS NOT NULL)
                 THEN
                     SELECT `id` INTO `ID` FROM `users` WHERE `email` = `mail`
@@ -40,11 +38,9 @@ return new class extends Migration
                         SET `response_message` = 'Success';
                     END IF;
                 ELSE
-                    SET `response_message`='Error';
+                    SET `response_message` = 'Error';
                 END IF;
-            END$$
-
-            DELIMITER ;
+            END
         ";
 
         DB::unprepared($procedure);
@@ -57,7 +53,7 @@ return new class extends Migration
      */
     public function down()
     {
-        $procedure = " DROP PROCEDURE IF EXISTS `sp_log_in` ";
+        $procedure = " DROP PROCEDURE IF EXISTS `sp_log_in`; ";
 
         DB::unprepared($procedure);
     }

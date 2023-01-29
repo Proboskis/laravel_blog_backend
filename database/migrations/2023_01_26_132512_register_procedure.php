@@ -15,22 +15,19 @@ return new class extends Migration
     public function up()
     {
         $procedure = "
-            DELIMITER $$
-
-            DROP PROCEDURE IF EXISTS `sp_register_new_user`$$
+            DROP PROCEDURE IF EXISTS `sp_register_new_user`;
             CREATE PROCEDURE `sp_register_new_user` (
-                IN `mail` VARCHAR(48),
-                IN `pass` VARCHAR(48)
+                IN `username` VARCHAR(50),
+                IN `mail` VARCHAR(50),
+                IN `pass` VARCHAR(20)
             )
             MODIFIES SQL DATA
             BEGIN
                 DECLARE `_salt` CHAR(24);
                 SET `_salt` = SUBSTRING(MD5(RAND()), -24);
-                INSERT INTO `users`(`email`, `password`, `salt`)
-                VALUES (`mail`, UNHEX(SHA1(CONCAT(`pass`, `_salt`))), UNHEX(`_salt`));
-            END$$
-
-            DELIMITER ;
+                INSERT INTO `users`(`username`, `email`, `password`, `salt`)
+                VALUES (`username`, `mail`, UNHEX(SHA1(CONCAT(`pass`, `_salt`))), UNHEX(`_salt`));
+            END
         ";
 
         DB::unprepared($procedure);
@@ -43,7 +40,7 @@ return new class extends Migration
      */
     public function down()
     {
-        $procedure = " DROP PROCEDURE IF EXISTS `sp_register_new_user` ";
+        $procedure = " DROP PROCEDURE IF EXISTS `sp_register_new_user`; ";
 
         DB::unprepared($procedure);
     }
