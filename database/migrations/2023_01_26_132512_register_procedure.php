@@ -15,18 +15,20 @@ return new class extends Migration
     public function up()
     {
         $procedure = "
-            DROP PROCEDURE IF EXISTS `sp_register_new_user`;
-            CREATE PROCEDURE `sp_register_new_user` (
-                IN `username` VARCHAR(50),
-                IN `mail` VARCHAR(50),
-                IN `pass` VARCHAR(20)
+            CREATE PROCEDURE sp_register_new_user(
+                IN username VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
+                IN `mail` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
+                IN pass CHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
             )
-            MODIFIES SQL DATA
             BEGIN
-                DECLARE `_salt` CHAR(24);
-                SET `_salt` = SUBSTRING(MD5(RAND()), -24);
-                INSERT INTO `users`(`username`, `email`, `password`, `salt`)
-                VALUES (`username`, `mail`, UNHEX(SHA1(CONCAT(`pass`, `_salt`))), UNHEX(`_salt`));
+                IF (SELECT COUNT(users.id) FROM users WHERE users.username = username) > 0 THEN
+                    SET @message_text = CONCAT('User \'', username, '\' already exists');
+                    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text;
+                ELSE
+                    SET @salt = UNHEX(SHA1(CONCAT(RAND(), RAND(), RAND())));
+                    INSERT INTO users(username, email, salt, password)
+                    VALUES (username, mail, @salt, UNHEX(SHA1(CONCAT(HEX(@salt), pass))));
+                END IF;
             END
         ";
 

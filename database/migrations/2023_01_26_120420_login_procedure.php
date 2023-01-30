@@ -15,30 +15,17 @@ return new class extends Migration
     public function up()
     {
         $procedure = "
-            DROP PROCEDURE IF EXISTS `sp_log_in`;
-            CREATE PROCEDURE `sp_log_in` (
-               IN `mail` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
-               IN `pass` VARCHAR(20) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
-               OUT `response_message` VARCHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
-               OUT `ID` BIGINT
+            CREATE PROCEDURE sp_log_in(
+                IN username VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
+                IN pass CHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
             )
-            READS SQL DATA
             BEGIN
-                DECLARE `_salt` CHAR(24);
-                SET `ID` = NULL;
-
-                SELECT HEX(`salt`) INTO `_salt` FROM `users` WHERE `email` = `mail`;
-                IF (`_salt` IS NOT NULL)
-                THEN
-                    SELECT `id` INTO `ID` FROM `users` WHERE `email` = `mail`
-                    AND `password` = UNHEX(SHA1(CONCAT(`pass`, `_salt`)));
-                    IF(`ID` IS NULL) THEN
-                        SET `response_message` = 'Incorrect password';
-                    ELSE
-                        SET `response_message` = 'Success';
-                    END IF;
+                SELECT users.id, users.username, users.salt INTO @id, @username, @salt FROM users WHERE users.username = username;
+                IF (SELECT COUNT(users.id) FROM users WHERE users.username = username AND users.password = UNHEX(SHA1(CONCAT(HEX(@salt), pass)))) != TRUE THEN
+                    SET @message_text = CONCAT('Login incorrect for user \'', @username, '\'');
+                    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text;
                 ELSE
-                    SET `response_message` = 'Error';
+                    SELECT @id AS id, @username AS username;
                 END IF;
             END
         ";

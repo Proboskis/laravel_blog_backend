@@ -24,7 +24,7 @@ return new class extends Migration
             $table->datetime('email_verified_at')->nullable();
             $table->char('password', 20)->charset('binary');
 //            $table->string('password', 40);
-            $table->char('salt', 12)->charset('binary')->nullable();
+            $table->char('salt', 20)->charset('binary')->nullable();
             $table->tinyText('intro')->nullable();
             $table->text('profile')->nullable();
             $table->rememberToken();
