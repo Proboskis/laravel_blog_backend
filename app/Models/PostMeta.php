@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PostMeta extends Model
 {
@@ -23,7 +24,8 @@ class PostMeta extends Model
     ];
 
     // Relationship with Post
-    public function posts() {
+    public function posts(): BelongsTo
+    {
         return $this->belongsTo(Post::class, 'post_id');
     }
 }

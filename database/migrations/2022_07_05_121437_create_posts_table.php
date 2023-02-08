@@ -12,14 +12,14 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('post_parent_id')->unsigned()->nullable()->default(DB::raw('NULL'));
             $table->foreign('post_parent_id')->references('id')->on('posts');
-            $table->string('title', 25);
+            $table->string('title', 25)->index();
             $table->string('meta_title', 100);
             $table->string('slug', 100);
             $table->tinyInteger('reading_time');
@@ -38,7 +38,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('posts');
     }

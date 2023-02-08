@@ -47,7 +47,7 @@ Route::get('/post-meta', [PostMetaController::class, 'index']);
 Route::get('/post-meta/{id}', [PostMetaController::class, 'show']);
 
 // Protected routes
-Route::group(['middleware' => ['auth:sanctum']], function() {
+Route::group(['middleware' => 'auth'], function() {
     // Login and post related private routes
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/posts', [PostController::class, 'store']);

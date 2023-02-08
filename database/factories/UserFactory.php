@@ -18,12 +18,18 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $salt = "UNHEX(SHA1(CONCAT(RAND(), RAND(), RAND())))";
+        $password = "UNHEX(SHA1(CONCAT(HEX($salt), 'password')))";
+
         return [
             'username' => fake()->userName(),
-            'first_name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'mobile_phone' => fake()->phoneNumber(),
             'email' => fake()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => 'password', // password
+            'password' => DB::raw($password), // password
+            'salt' => DB::raw($salt),
             'remember_token' => Str::random(10),
         ];
     }

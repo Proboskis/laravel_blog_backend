@@ -12,14 +12,14 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 50);
+            $table->string('username', 50)->index();
             $table->string('first_name', 50)->nullable();
             $table->string('last_name', 50)->nullable();
-            $table->string('mobile_phone', 15)->unique()->nullable();
+            $table->string('mobile_phone', 25)->unique()->nullable();
             $table->string('email', 50)->unique();
             $table->datetime('email_verified_at')->nullable();
             $table->char('password', 20)->charset('binary');
@@ -39,7 +39,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('users');
     }

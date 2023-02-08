@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends Model
 {
@@ -25,7 +26,8 @@ class Category extends Model
     ];
 
     // Relationship with PostCategory
-    public function post_categories() {
+    public function post_categories(): BelongsToMany
+    {
         return $this->belongsToMany(Post::class, 'post_id');
     }
 }

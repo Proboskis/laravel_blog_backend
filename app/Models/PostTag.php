@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PostTag extends Model
 {
@@ -17,12 +18,14 @@ class PostTag extends Model
     // protected $table = "post_tags";
 
     // Relationship with Post
-    public function posts() {
+    public function posts(): HasMany
+    {
         return $this->hasMany(Post::class, 'post_id');
     }
 
     // Relationship with Tag
-    public function tags() {
+    public function tags(): HasMany
+    {
         return $this->hasMany(Tag::class, 'tag_id');
     }
 }

@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $fields = $request->validate([
             'username' => 'required|string',
             'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string|confirmed',
+            'password_confirmation' => 'required|string'
         ]);
 
-        $user = User::create([
+        /*$user = User::create([
             'username' => $fields['username'],
             'email' => $fields['email'],
             'password' => bcrypt($fields['password'])
@@ -27,9 +30,13 @@ class UserController extends Controller
         $response = [
             'username' => $user,
             'token' => $token
-        ];
+        ];*/
 
-        return response($response, 201);
+        $implodedData = implode("', '", $fields);
+
+        $result = DB::select("CALL sp_register_new_user('" . $implodedData . "')");
+
+        return response($result, 201);
     }
 
     public function login(Request $request) {

@@ -12,13 +12,13 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_parent_id')->unsigned()->nullable()->default(DB::raw('NULL'));
             $table->foreign('category_parent_id')->references('id')->on('categories');
-            $table->string('title', 75);
+            $table->string('title', 50)->index();
             $table->string('meta_title', 100);
             $table->string('slug', 100);
             $table->text('content');
@@ -32,7 +32,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('categories');
     }

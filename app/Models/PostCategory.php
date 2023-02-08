@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PostCategory extends Model
 {
@@ -17,12 +18,14 @@ class PostCategory extends Model
     // protected $table = "post_categories";
 
     // Relationship with Post
-    public function posts() {
+    public function posts(): HasMany
+    {
         return $this->hasMany(Post::class, 'post_id');
     }
 
     // Relationship with Category
-    public function tags() {
+    public function tags(): HasMany
+    {
         return $this->hasMany(Category::class, 'categories_id');
     }
 }

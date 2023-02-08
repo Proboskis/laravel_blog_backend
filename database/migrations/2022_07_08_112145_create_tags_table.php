@@ -12,11 +12,11 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 75);
+            $table->string('title', 50)->index();
             $table->string('meta_title', 100);
             $table->string('slug', 100);
             $table->text('content');
@@ -30,7 +30,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('tags');
     }

@@ -37,7 +37,6 @@ class PostController extends Controller
             'content' => 'required|string'
         ]);
 
-        
         $implodedData = implode("', '", $validatedData);
 
         return DB::select("CALL create_post('" . $implodedData . "')");
@@ -81,7 +80,7 @@ class PostController extends Controller
         ]);
 
         $implodedData = implode("', '", $validatedData);
-        
+
         return DB::select("CALL update_post('" . $data . $implodedData . "')");
         // $post = Post::find($id);
         // $post->update($request->all());
