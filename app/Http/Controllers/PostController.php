@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return DB::select("CALL get_all_posts()");
+        return DB::select("CALL sp_list_all_records()");
         // return Post::all();
     }
 

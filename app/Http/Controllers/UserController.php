@@ -41,12 +41,12 @@ class UserController extends Controller
 
     public function login(Request $request) {
         $fields = $request->validate([
-            'email' => 'required|string',
+            'username' => 'required|string',
             'password' => 'required|string'
         ]);
 
         // check email
-        $user = User::where('email', $fields['email'])->first();
+        /*$user = User::where('email', $fields['email'])->first();
 
         // check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
@@ -55,11 +55,17 @@ class UserController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        $token = $user->createToken('myapptoken')->plainTextToken;*/
+
+        $implodedData = implode("', '", $fields);
+
+        $result = DB::select("CALL sp_log_in('" . $implodedData . "')");
+
+        return response($result, 201);
 
         $response = [
             'username' => $user,
-            'token' => $token
+            //'token' => $token
         ];
 
         return response($response, 201);

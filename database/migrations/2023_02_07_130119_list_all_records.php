@@ -14,15 +14,10 @@ return new class extends Migration
     public function up()
     {
         $procedure = "
-            CREATE PROCEDURE sp_register_new_user(
-                IN `username` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
-                IN `mail` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
-                IN `pass` CHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
-                IN `pass_confirm` CHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
-            )
-            MODIFIES SQL DATA
+            CREATE PROCEDURE sp_list_all_records()
+            READS SQL DATA
             BEGIN
-
+                SELECT * FROM posts;
             END
         ";
     }
