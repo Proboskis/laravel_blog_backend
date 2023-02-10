@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -20,6 +19,8 @@ return new class extends Migration
                 SELECT * FROM posts;
             END
         ";
+
+        DB::unprepared($procedure);
     }
 
     /**
@@ -29,6 +30,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        $procedure = " DROP PROCEDURE IF EXISTS `sp_list_all_records()`; ";
+
+        DB::unprepared($procedure);
     }
 };
