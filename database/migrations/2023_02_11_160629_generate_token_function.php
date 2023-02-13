@@ -40,6 +40,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        $procedure = " DROP FUNCTION IF EXISTS `f_generate_token`; ";
+
+        DB::unprepared($procedure);
     }
 };

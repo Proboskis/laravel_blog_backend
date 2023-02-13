@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class CustomAuthentication
 {
@@ -19,15 +19,15 @@ class CustomAuthentication
      */
     public function handle(Request $request, Closure $next)
     {
-        $path = $request->path();
-        if (($path == 'login' || $path == 'register') &&
-        (Session::get('user'))) {
-            return redirect('/');
-        } else if (($path != 'login' && !Session::get('user') ||
-            $path != 'register' && !Session::get('user'))) {
-            return redirect('/api/login');
-        } else {
-            return $next($request);
+        //$header = $request->header('Authorization');
+        $token = request()->bearerToken();
+        $result = DB::select("CALL sp_token_comparator($token)");
+
+        if ($token !== $result) {
+            return response ([
+                'message' => 'Something went wrong, please log in again ...'
+            ], 404);
         }
+        return $next($request);
     }
 }

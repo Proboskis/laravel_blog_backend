@@ -41,7 +41,8 @@ class UserController extends Controller
 
     public function login(Request $request) {
         $fields = $request->validate([
-            'username' => 'required|string',
+            'username' => 'string',
+            'email' => 'string',
             'password' => 'required|string'
         ]);
 
@@ -62,13 +63,6 @@ class UserController extends Controller
         $result = DB::select("CALL sp_log_in('" . $implodedData . "')");
 
         return response($result, 201);
-
-        $response = [
-            'username' => $user,
-            //'token' => $token
-        ];
-
-        return response($response, 201);
     }
 
     public function logout(Request $request) {

@@ -47,7 +47,7 @@ return new class extends Migration
                         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
                     ELSE
                         SET @b_token = f_generate_token(@username);
-                        INSERT INTO `personal_access_tokens2` (name, token, abilities, last_used_at)
+                        INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
                         VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
                         SELECT @id AS id, @email AS email, @b_token AS bearer_token;
                     END IF;

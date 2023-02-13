@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -16,7 +17,16 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+    #[ArrayShape(['username' => "string",
+        'first_name' => "string",
+        'last_name' => "string",
+        'mobile_phone' => "string",
+        'email' => "string",
+        'email_verified_at' => "\Illuminate\Support\Carbon",
+        'password' => "\Illuminate\Database\Query\Expression",
+        'salt' => "\Illuminate\Database\Query\Expression",
+        'remember_token' => "string"])]
+    public function definition(): array
     {
         $salt = "UNHEX(SHA1(CONCAT(RAND(), RAND(), RAND())))";
         $password = "UNHEX(SHA1(CONCAT(HEX($salt), 'password')))";
@@ -39,7 +49,7 @@ class UserFactory extends Factory
      *
      * @return static
      */
-    public function unverified()
+    public function unverified(): static
     {
         return $this->state(function (array $attributes) {
             return [

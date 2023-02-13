@@ -25,7 +25,6 @@ use App\Http\Controllers\PostMetaController;
 // Login and post related public routes
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/{id}', [PostController::class, 'show']);
 Route::get('/posts/search/{title}', [PostController::class, 'search']);
 
@@ -50,6 +49,8 @@ Route::get('/post-meta/{id}', [PostMetaController::class, 'show']);
 // Protected routes
 Route::group(['middleware' => 'custom.auth'], function() {
     // Login and post related private routes
+
+    Route::get('/posts', [PostController::class, 'index']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/posts', [PostController::class, 'store']);
     Route::put('/posts/{id}', [PostController::class, 'update']);
