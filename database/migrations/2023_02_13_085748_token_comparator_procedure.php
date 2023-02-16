@@ -14,13 +14,13 @@ return new class extends Migration
     {
         $procedure = "
             CREATE PROCEDURE sp_token_comparator(
-                IN `input_token` VARCHAR(90) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
+                IN `token` VARCHAR(90) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
             )
             READS SQL DATA
             BEGIN
             IF (SELECT COUNT(personal_access_tokens2.id)
-                FROM personal_access_tokens2 WHERE personal_access_tokens2.token = input_token) > 0 THEN
-                SELECT token FROM personal_access_tokens2 WHERE personal_access_tokens2.token = input_token;
+                FROM personal_access_tokens2 WHERE personal_access_tokens2.token = token) > 0 THEN
+                SELECT token FROM personal_access_tokens2 WHERE personal_access_tokens2.token = token;
             ELSE
                 SET @invalid_value = 0;
                 SELECT @invalid_value;

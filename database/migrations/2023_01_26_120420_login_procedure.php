@@ -35,7 +35,9 @@ return new class extends Migration
                         SET @message_text = 'Incorrect credentials';
                         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
                     ELSE
-                        SET @b_token = f_generate_token(@username);
+                        SET @b_token = f_generate_token(username);
+                        INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
+                        VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
                         SELECT @id AS id, @username AS username, @b_token AS bearer_token;
                     END IF;
                 ELSEIF `email` IS NOT NULL THEN
@@ -46,7 +48,7 @@ return new class extends Migration
                         SET @message_text = 'Incorrect credentials';
                         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
                     ELSE
-                        SET @b_token = f_generate_token(@username);
+                        SET @b_token = f_generate_token(username);
                         INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
                         VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
                         SELECT @id AS id, @email AS email, @b_token AS bearer_token;
