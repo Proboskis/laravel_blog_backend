@@ -22,8 +22,8 @@ class CustomAuthentication
         //$header = $request->header('Authorization');
         $token = request()->bearerToken();
         $result = DB::select("CALL sp_token_comparator('".$token."')");
-        dd($result);
-        if ($token !== $result2) {
+        $result = $result[0]->token;
+        if ($token !== $result) {
             return response ([
                 'message' => 'Something went wrong, please log in again ...'
             ], 404);
