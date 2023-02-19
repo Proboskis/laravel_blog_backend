@@ -16,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('personal_access_tokens2', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->string('token', 90)->unique();
             $table->text('abilities')->nullable();

@@ -23,7 +23,7 @@ return new class extends Migration
                 SELECT token FROM personal_access_tokens2 WHERE personal_access_tokens2.token = token;
             ELSE
                 SET @invalid_value = 0;
-                SELECT @invalid_value;
+                SELECT @invalid_value AS token;
             END IF;
             END
         ";

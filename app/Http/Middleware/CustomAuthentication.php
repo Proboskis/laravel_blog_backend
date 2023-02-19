@@ -19,12 +19,12 @@ class CustomAuthentication
      */
     public function handle(Request $request, Closure $next)
     {
-        //$header = $request->header('Authorization');
+//        $token = $request->header('Authorization');
         $token = request()->bearerToken();
         $result = DB::select("CALL sp_token_comparator('".$token."')");
         $result = $result[0]->token;
-        if ($token !== $result) {
-            return response ([
+        if ($token != $result) {
+            return response([
                 'message' => 'Something went wrong, please log in again ...'
             ], 404);
         }
