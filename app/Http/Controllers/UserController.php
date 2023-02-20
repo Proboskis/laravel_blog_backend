@@ -9,7 +9,8 @@ use JetBrains\PhpStorm\ArrayShape;
 
 class UserController extends Controller
 {
-    public function register(Request $request): ResponseFactory
+    public function register(Request $request)
+    : \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|ResponseFactory
     {
         $fields = $request->validate([
             'username' => 'required|string',
@@ -23,7 +24,8 @@ class UserController extends Controller
         return response($result, 201);
     }
 
-    public function login(Request $request): ResponseFactory
+    public function login(Request $request)
+    : \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|ResponseFactory
     {
         $fields = $request->validate([
             'username' => 'string',
@@ -37,8 +39,9 @@ class UserController extends Controller
     }
 
     #[ArrayShape(['message' => "string"])]
-    public function logout($token): array
+    public function logout(): array
     {
+        $token = request()->bearerToken();
         DB::select("CALL sp_log_out('". $token ."')");
         return [
             'message' => 'Logged out'

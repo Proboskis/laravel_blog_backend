@@ -20,7 +20,9 @@ class CustomAuthentication
     public function handle(Request $request, Closure $next)
     {
 //        $token = $request->header('Authorization');
+//        dd($token);
         $token = request()->bearerToken();
+//        dd($token);
         $result = DB::select("CALL sp_token_comparator('".$token."')");
         $result = $result[0]->token;
         if ($token != $result) {

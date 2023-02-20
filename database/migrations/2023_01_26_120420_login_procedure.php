@@ -18,7 +18,6 @@ return new class extends Migration
                 IN `email` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci,
                 IN `pass` CHAR(64) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
             )
-            READS SQL DATA
             MODIFIES SQL DATA
             BEGIN
                 IF `username` = '' THEN SET `username` = NULL; END IF;
@@ -36,8 +35,9 @@ return new class extends Migration
                         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
                     ELSE
                         SET @b_token = f_generate_token(username);
-                        INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
-                        VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
+                        SELECT id INTO @user_id FROM users WHERE users.username = username;
+                        INSERT INTO personal_access_tokens2 (name, user_id, token, abilities, last_used_at)
+                        VALUES ('auth_token', @user_id, @b_token, '*', CURRENT_TIMESTAMP);
                         SELECT @id AS id, @username AS username, @b_token AS bearer_token;
                     END IF;
                 ELSEIF `email` IS NOT NULL THEN
@@ -49,8 +49,9 @@ return new class extends Migration
                         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
                     ELSE
                         SET @b_token = f_generate_token(username);
-                        INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
-                        VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
+                        SELECT id INTO @user_id FROM users WHERE users.email = email;
+                        INSERT INTO personal_access_tokens2 (name, user_id, token, abilities, last_used_at)
+                        VALUES ('auth_token', @user_id, @b_token, '*', CURRENT_TIMESTAMP);
                         SELECT @id AS id, @email AS email, @b_token AS bearer_token;
                     END IF;
                 ELSE

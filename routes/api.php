@@ -48,8 +48,8 @@ Route::get('/post-meta/{id}', [PostMetaController::class, 'show']);
 
 // Protected routes
 Route::group(['middleware' => 'custom.auth'], function() {
-    // Login and post related private routes
 
+    // Login and post related private routes
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::post('/posts', [PostController::class, 'store']);

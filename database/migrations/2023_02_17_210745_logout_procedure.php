@@ -14,46 +14,17 @@ return new class extends Migration
     {
         $procedure = "
             CREATE PROCEDURE sp_log_out(
-                IN `token` VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
+                IN `token` VARCHAR(90) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
             )
-            READS SQL DATA
             MODIFIES SQL DATA
             BEGIN
-                IF `username` = '' THEN SET `username` = NULL; END IF;
-                IF `email` = '' THEN SET `email` = NULL; END IF;
-                IF `pass` = '' THEN
-                    SET @message_text = 'The password must be provided ...';
+                IF `token` = '' THEN SET `token` = NULL; END IF;
+                IF `token` = NULL THEN
+                    SET @message_text = 'The token must be provided ...';
                     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
                 END IF;
-                IF `username` IS NOT NULL THEN
-                    SELECT users.id, users.username, users.salt
-                    INTO @id, @username, @salt FROM users WHERE users.username = username;
-                    IF (SELECT COUNT(users.id) FROM users WHERE users.username = username
-                    AND users.password = UNHEX(SHA1(CONCAT(HEX(@salt), pass)))) != TRUE THEN
-                        SET @message_text = 'Incorrect credentials';
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
-                    ELSE
-                        SET @b_token = f_generate_token(username);
-                        INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
-                        VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
-                        SELECT @id AS id, @username AS username, @b_token AS bearer_token;
-                    END IF;
-                ELSEIF `email` IS NOT NULL THEN
-                    SELECT users.id, users.email, users.salt
-                    INTO @id, @email, @salt FROM users WHERE users.email = email;
-                    IF (SELECT COUNT(users.id) FROM users WHERE users.email = email
-                    AND users.password = UNHEX(SHA1(CONCAT(HEX(@salt), pass)))) != TRUE THEN
-                        SET @message_text = 'Incorrect credentials';
-                        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
-                    ELSE
-                        SET @b_token = f_generate_token(username);
-                        INSERT INTO personal_access_tokens2 (name, token, abilities, last_used_at)
-                        VALUES ('auth_token', @b_token, '*', CURRENT_TIMESTAMP);
-                        SELECT @id AS id, @email AS email, @b_token AS bearer_token;
-                    END IF;
-                ELSE
-                    SET @message_text = 'At least one of these two, email or password must be provided ...';
-                    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message_text, MYSQL_ERRNO = 1644;
+                IF `token` IS NOT NULL THEN
+                    DELETE FROM personal_access_tokens2 WHERE personal_access_tokens2.token = token;
                 END IF;
             END
         ";
@@ -68,7 +39,7 @@ return new class extends Migration
      */
     public function down() : void
     {
-        $procedure = " DROP PROCEDURE IF EXISTS `sp_log_in`; ";
+        $procedure = " DROP PROCEDURE IF EXISTS `sp_log_out`; ";
 
         DB::unprepared($procedure);
     }
